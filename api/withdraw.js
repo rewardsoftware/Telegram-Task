@@ -2,7 +2,7 @@
 // FaucetPay instant USDT (TRC20) withdrawal via registered email
 // Docs: https://faucetpay.io/page/api-documentation
 
-const FAUCETPAY_API_KEY = process.env.FAUCETPAY_API_KEY || 'c12b5478bcceac57b2a7f3bb3606e0132f259ef0518e0114b6435cb170d07e4a';
+const FAUCETPAY_API_KEY = process.env.FAUCETPAY_API_KEY || '';
 const FAUCETPAY_API_URL = 'https://faucetpay.io/api/v1/send';
 
 const T_PER_USD   = 10000;        // 10000 T Coin = $1
