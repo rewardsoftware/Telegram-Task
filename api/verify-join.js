@@ -2,7 +2,7 @@
 // Verifies if a Telegram user is a member of a given channel
 // Bot (@Rewardsoftware1) must be admin in all channels
 
-const BOT_TOKEN = process.env.BOT_TOKEN || '8828221372:AAGXZLPtFQ7XqSug6k9WK0THd280l6i4PB4';
+const BOT_TOKEN = process.env.BOT_TOKEN || ':';
 
 // Allowed channel usernames (without @)
 const ALLOWED_CHANNELS = [
