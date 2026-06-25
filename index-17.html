@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Telegram Task</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://ad.gigapub.tech/script?id=6999"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<script src='//libtl.com/sdk.js' data-zone='11196243' data-sdk='show_11196243'></script>
+<script>
+// Monetag In-App Interstitial — auto background ads
+// Runs automatically: 2 ads per 0.1hr (6 min), 30s interval, 5s first-show delay
+// everyPage: false = session persists across page switches (no reset)
+window.addEventListener('load', function() {
+  var monetagInAppTimer = setInterval(function() {
+    if (typeof show_11196243 === 'function') {
+      clearInterval(monetagInAppTimer);
+      show_11196243({
+        type: 'inApp',
+        inAppSettings: {
+          frequency: 2,
+          capping: 0.1,
+          interval: 30,
+          timeout: 5,
+          everyPage: false
+        }
+      });
+    }
+  }, 500);
+});
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --purple: #7C3AED;
+    --purple-light: #A78BFA;
+    --purple-bg: #EDE9FE;
+    --blue: #2563EB;
+    --blue-light: #60A5FA;
+    --green: #16A34A;
+    --green-light: #4ADE80;
+    --green-bg: #DCFCE7;
+    --white: #FFFFFF;
+    --bg: #F5F3FF;
+    --text: #1E1B4B;
+    --muted: #6B7280;
+    --border: #DDD6FE;
+    --card: #FFFFFF;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 100px;
+  }
+
+  /* Header */
+  .header {
+    background: var(--white);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--purple);
+  }
+  .balance-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--purple-bg);
+    border: 1.5px solid var(--purple-light);
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .usdt-icon {
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, #FBBF24, #F59E0B);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(245,158,11,0.4);
+  }
+  .balance-amount {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--purple);
+    line-height: 1.1;
+  }
+  .balance-usd {
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* Content */
+  .content { padding: 16px; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .stat-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--purple);
+  }
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .stat-value.green { color: var(--green); }
+
+  /* Section title */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* Channel Card */
+  .channel-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .channel-card.joined {
+    border-color: var(--green-light);
+    background: linear-gradient(135deg, #fff 60%, #f0fdf4);
+  }
+  .channel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .channel-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .channel-info { flex: 1 }
+  .channel-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .channel-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .reward-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #f0fdf4;
+    border: 1.5px solid var(--green-light);
+    border-radius: 10px;
+    padding: 4px 8px;
+    flex-shrink: 0;
+  }
+  .reward-badge .usdt-icon { width: 16px; height: 16px; font-size: 8px; }
+  .reward-text { font-size: 12px; font-weight: 700; color: var(--green); }
+
+  .channel-actions { display: flex; gap: 8px; }
+
+  .btn-join {
+    flex: 1;
+    padding: 11px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn-join:active { transform: scale(0.97); opacity: 0.9; }
+
+  .btn-verify {
+    flex: 1;
+    padding: 11px;
+    background: linear-gradient(135deg, var(--green), #15803d);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn-verify:active { transform: scale(0.97); opacity: 0.9; }
+
+  .btn-claimed {
+    flex: 1;
+    padding: 11px;
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1.5px solid var(--green-light);
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1E1B4B;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Success Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,27,75,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    padding: 20px;
+  }
+  .modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-box {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px 24px 22px;
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    transform: scale(0.85) translateY(10px);
+    transition: transform 0.25s;
+    box-shadow: 0 20px 50px rgba(30,27,75,0.25);
+  }
+  .modal-overlay.show .modal-box {
+    transform: scale(1) translateY(0);
+  }
+  .modal-handle {
+    width: 38px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    margin: 0 auto 18px;
+  }
+  .modal-icon-circle {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    margin: 0 auto 16px;
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .modal-sub {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 18px;
+    line-height: 1.4;
+  }
+  .modal-amount {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+  .modal-payout-id {
+    font-size: 11.5px;
+    color: var(--muted);
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 18px;
+    word-break: break-all;
+  }
+  .modal-done-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .modal-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .modal-detail-row:last-of-type { border-bottom: none; }
+  .modal-detail-label { color: var(--muted); font-weight: 600; }
+  .modal-detail-val { color: var(--text); font-weight: 700; }
+  .modal-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .modal-btn-cancel {
+    flex: 1;
+    padding: 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .modal-btn-confirm {
+    flex: 1.3;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 8px 0 12px;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .nav-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--muted); }
+  .nav-item.active .nav-label { color: var(--purple); }
+
+  /* ── CSS Nav Icons ── */
+  /* Tasks: clipboard */
+  .icon-tasks .ic-body {
+    width: 16px; height: 19px;
+    border: 2px solid var(--muted);
+    border-radius: 3px;
+    position: relative;
+  }
+  .icon-tasks .ic-clip {
+    position: absolute;
+    top: -3px; left: 50%;
+    transform: translateX(-50%);
+    width: 8px; height: 4px;
+    background: var(--bg);
+    border: 2px solid var(--muted);
+    border-radius: 2px;
+  }
+  .icon-tasks .ic-line {
+    position: absolute;
+    left: 3px; right: 3px;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 1px;
+  }
+  .icon-tasks .ic-line:nth-child(2) { top: 6px; }
+  .icon-tasks .ic-line:nth-child(3) { top: 10px; width: 60%; }
+  .nav-item.active .icon-tasks .ic-body,
+  .nav-item.active .icon-tasks .ic-clip { border-color: var(--purple); }
+  .nav-item.active .icon-tasks .ic-line { background: var(--purple); }
+
+  /* Ads: play button */
+  .icon-ads .ic-circle {
+    width: 22px; height: 22px;
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-ads .ic-triangle {
+    width: 0; height: 0;
+    margin-left: 2px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--muted);
+  }
+  .nav-item.active .icon-ads .ic-circle { border-color: var(--purple); }
+  .nav-item.active .icon-ads .ic-triangle { border-left-color: var(--purple); }
+
+  /* Withdraw: card */
+  .icon-withdraw .ic-card {
+    width: 22px; height: 16px;
+    border: 2px solid var(--muted);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .icon-withdraw .ic-stripe {
+    position: absolute;
+    top: 4px; left: 0; right: 0;
+    height: 3px;
+    background: var(--muted);
+  }
+  .icon-withdraw .ic-dot {
+    position: absolute;
+    bottom: 2.5px; right: 3px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+  .nav-item.active .icon-withdraw .ic-card,
+  .nav-item.active .icon-withdraw .ic-stripe,
+  .nav-item.active .icon-withdraw .ic-dot { border-color: var(--purple); background: var(--purple); }
+
+  /* History: clock */
+  .icon-history .ic-clock {
+    width: 20px; height: 20px;
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+    position: relative;
+  }
+  .icon-history .ic-hand-min {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 2px; height: 7px;
+    background: var(--muted);
+    border-radius: 1px;
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(0deg);
+  }
+  .icon-history .ic-hand-hr {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 2px; height: 5px;
+    background: var(--muted);
+    border-radius: 1px;
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(90deg);
+  }
+  .nav-item.active .icon-history .ic-clock { border-color: var(--purple); }
+  .nav-item.active .icon-history .ic-hand-min,
+  .nav-item.active .icon-history .ic-hand-hr { background: var(--purple); }
+
+  /* Info box */
+  .info-box {
+    background: linear-gradient(135deg, var(--purple-bg), #dbeafe);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .info-box strong { color: var(--purple); }
+
+  /* Withdraw page */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .withdraw-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 20px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .withdraw-balance-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .withdraw-balance-label { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 16px; }
+  .withdraw-big {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--purple);
+  }
+  .withdraw-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .withdraw-input:focus { border-color: var(--purple-light); }
+  .btn-withdraw {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-withdraw:active { opacity: 0.85; }
+  .min-withdraw { font-size: 12px; color: var(--muted); text-align: center; margin-top: 8px; }
+
+  /* History */
+  .history-item {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .history-icon-wrap {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--green-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .history-info { flex: 1 }
+  .history-title { font-size: 14px; font-weight: 600; }
+  .history-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .history-amount { font-size: 14px; font-weight: 700; color: var(--green); }
+
+  /* Loader spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 10px; }
+  .empty-state p { font-size: 14px; }
+
+  /* Daily Visit Button */
+  .btn-visit {
+    flex: 1;
+    padding: 11px;
+    background: linear-gradient(135deg, #D97706, #F59E0B);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn-visit:active { transform: scale(0.97); opacity: 0.9; }
+  .btn-visit:disabled { opacity: 0.6; cursor: default; }
+
+  .btn-visit-done {
+    flex: 1;
+    padding: 11px;
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1.5px solid #FCD34D;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Countdown Overlay */
+  .visit-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+  }
+  .visit-overlay.show { display: flex; }
+  .visit-modal {
+    background: white;
+    border-radius: 24px;
+    padding: 32px 28px;
+    text-align: center;
+    max-width: 300px;
+    width: 90%;
+  }
+  .visit-modal .v-emoji { font-size: 48px; margin-bottom: 12px; }
+  .visit-modal .v-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .visit-modal .v-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+  .countdown-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #D97706, #F59E0B);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+    font-weight: 900;
+    color: white;
+    box-shadow: 0 4px 20px rgba(217,119,6,0.4);
+  }
+  .visit-status {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .visit-status.success { color: var(--green); font-weight: 700; font-size: 15px; }
+  .visit-status.fail { color: #DC2626; font-weight: 700; font-size: 14px; }
+  .btn-visit-cancel {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  /* ── Ads Page ── */
+  .ads-hero {
+    background: linear-gradient(135deg, #1E1B4B, #4338CA 60%, #7C3AED);
+    border-radius: 20px;
+    padding: 22px 18px;
+    margin-bottom: 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .ads-hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(251,191,36,0.25), transparent 70%);
+  }
+  .ads-hero-coin {
+    width: 56px; height: 56px;
+    margin: 0 auto 10px;
+    background: linear-gradient(135deg, #FDE68A, #F59E0B);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 900;
+    color: #7C2D12;
+    box-shadow: 0 6px 18px rgba(245,158,11,0.5);
+    position: relative;
+    z-index: 1;
+  }
+  .ads-hero-title {
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+  }
+  .ads-hero-sub {
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ads-progress-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .ads-dot {
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 700;
+  }
+  .ads-dot.done {
+    background: linear-gradient(135deg, #FDE68A, #F59E0B);
+    border-color: #F59E0B;
+    color: #7C2D12;
+  }
+
+  .ad-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 18px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .ad-card-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 12px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #FDE68A, #F59E0B);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(245,158,11,0.35);
+  }
+  .ad-card-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .ad-card-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; }
+  .ad-reward-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FEF3C7;
+    border: 1.5px solid #FCD34D;
+    border-radius: 20px;
+    padding: 6px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #92400E;
+  }
+
+  .btn-watch-ad {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s, transform 0.1s;
+    box-shadow: 0 6px 16px rgba(245,158,11,0.35);
+  }
+  .btn-watch-ad:active { transform: scale(0.97); opacity: 0.92; }
+  .btn-watch-ad:disabled {
+    background: #E5E7EB;
+    color: #9CA3AF;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  .ad-cooldown-wrap {
+    width: 100%;
+    padding: 13px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .ad-cooldown-ring {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    border-top-color: var(--purple);
+    animation: spin 1.2s linear infinite;
+    flex-shrink: 0;
+  }
+  .ad-limit-msg {
+    color: #DC2626;
+    font-weight: 700;
+  }
+
+  .ads-info-box {
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A33);
+    border: 1.5px solid #FCD34D;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 12.5px;
+    color: #78350F;
+    line-height: 1.6;
+  }
+  .ads-info-box strong { color: #92400E; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-icon">🛡️</div>
+    <span class="header-title">Telegram Task</span>
+  </div>
+  <div class="balance-pill" onclick="showPage('withdraw')">
+    <div class="usdt-icon" style="font-size:11px">T</div>
+    <div>
+      <div class="balance-amount" id="headerBalance">0</div>
+      <div class="balance-usd" id="headerUSD">≈ $0.0000</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="confirmWithdrawModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-icon-circle" style="background:#E3E7FF"><svg viewBox="0 0 24 24" width="34" height="34" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="5" width="21" height="14" rx="4" fill="#2B2FA8"/><rect x="1.5" y="5" width="21" height="14" rx="4" fill="none" stroke="#7C83F0" stroke-width="1" stroke-dasharray="1.5 1.8" opacity="0.7"/><rect x="14.5" y="9.5" width="8.5" height="7" rx="2.2" fill="#1C1F73"/><circle cx="18.7" cy="13" r="1.5" fill="#8FD0FF"/></svg></div>
+    <div class="modal-title">Confirm Withdrawal</div>
+    <div class="modal-sub">Please review your withdrawal details before proceeding.</div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">T Coins</span>
+      <span class="modal-detail-val" id="confirmCoins">0 Coins</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">You Receive</span>
+      <span class="modal-detail-val" style="color:var(--green)" id="confirmUsdt">$0.0000 USDT</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">FaucetPay Email</span>
+      <span class="modal-detail-val" id="confirmEmail" style="font-size:11px;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">Processing</span>
+      <span class="modal-detail-val" style="color:var(--purple)">⚡ Instant</span>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn-cancel" onclick="closeConfirmWithdrawModal()">✕ Cancel</button>
+      <button class="modal-btn-confirm" id="confirmWithdrawOkBtn" onclick="doWithdraw()">✔ Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="withdrawSuccessModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-icon-circle" style="background:rgba(0,200,115,0.12);border:1.5px solid rgba(0,200,115,0.3)">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <div class="modal-title" style="color:var(--green)">Payment Successful! 🎉</div>
+    <div class="modal-sub">Your USDT has been sent to your FaucetPay account instantly.</div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">Amount Sent</span>
+      <span class="modal-detail-val" style="color:var(--green)" id="successUsdt">$0.0000 USDT</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">T Coins Deducted</span>
+      <span class="modal-detail-val" id="successCoins">0 Coins</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">To</span>
+      <span class="modal-detail-val" id="successEmail" style="font-size:11px;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">Payout ID</span>
+      <span class="modal-detail-val" id="successPayoutId" style="color:var(--purple)">—</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">Status</span>
+      <span class="modal-detail-val" style="color:var(--green)">✅ Completed</span>
+    </div>
+    <div style="margin-top:16px">
+      <button class="modal-done-btn" onclick="closeWithdrawSuccessModal()">🏠 Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Visit Countdown Overlay -->
+<div class="visit-overlay" id="visitOverlay">
+  <div class="visit-modal">
+    <div class="v-emoji" style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:#FEF3C7;margin:0 auto 12px"><svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#D97706"/></svg></div>
+    <div class="v-title" id="visitChannelName">Channel Name</div>
+    <div class="v-desc">Channel will open and the <strong>10 second</strong> timer starts automatically.<br>Please wait — reward will be credited instantly!</div>
+    <div class="countdown-circle" id="countdownNum">5</div>
+    <div class="visit-status" id="visitStatus">⏳ Timer running...</div>
+    <button class="btn-visit-cancel" id="visitCancelBtn" onclick="cancelVisit()">✖ Back (No Reward)</button>
+  </div>
+</div>
+
+<!-- Pages -->
+<div class="content">
+
+  <!-- TASKS PAGE -->
+  <div class="page active" id="page-tasks">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="statJoined">0</div>
+        <div class="stat-label">Joined</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statLeft">3</div>
+        <div class="stat-label">Remaining</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green" id="statEarned">0.0000</div>
+        <div class="stat-label">🪙 Earned</div>
+      </div>
+    </div>
+
+    <!-- Section 1: Join Channels -->
+    <div class="section-title">📢 Telegram Channels</div>
+    <div id="channelList"></div>
+
+    <!-- Section 2: Daily Visit -->
+    <div class="section-title" style="margin-top:20px" id="dailyVisitHeader"><svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-2px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#D97706"/></svg> Daily Visit</div>
+    <div id="dailyVisitList"></div>
+
+    <div class="info-box">
+      💡 Join a channel → Click <strong>Verify Join</strong> to claim <strong>1 T Coin</strong>.<br>
+      <svg viewBox="0 0 24 24" width="13" height="13" style="vertical-align:-2px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#D97706"/></svg> <strong>Daily Visit</strong> → Visit the channel (stay 10 sec) → Earn <strong>1 T Coin</strong> daily!<br>
+      🎬 <strong>Video Ads</strong> → 1 T Coin every 12 min (4/day).<br>
+      📣 <strong>Native Ads</strong> → 1 T Coin every 2 min (4/day).<br>
+      🖼️ <strong>Quick Ads</strong> → 1 T Coin every 3 min (3/day).<br>
+      🪟 <strong>Popup Ads</strong> → 1 T Coin every 3 min (2/day).<br>
+      Minimum withdrawal: <strong>25 T Coin = $0.0025 USDT</strong>.
+    </div>
+  </div>
+
+  <!-- WITHDRAW PAGE -->
+  <div class="page" id="page-withdraw">
+    <div class="section-title">Withdraw Earnings</div>
+
+    <!-- Balance Card -->
+    <div class="withdraw-card">
+      <div class="withdraw-balance-row">
+        <div class="usdt-icon" style="width:42px;height:42px;font-size:15px;font-weight:900">T</div>
+        <div>
+          <div class="withdraw-big" id="withdrawBig">0</div>
+          <div style="font-size:12px;color:var(--muted)" id="withdrawUsdEq">≈ $0.0000</div>
+        </div>
+      </div>
+      <div class="withdraw-balance-label" style="margin-top:4px">T Coin Balance</div>
+    </div>
+
+    <!-- FaucetPay Card -->
+    <div class="withdraw-card" style="margin-top:12px;padding:18px">
+
+      <!-- FaucetPay header -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1.5px solid var(--border)">
+        <div style="width:42px;height:42px;border-radius:10px;background:#0055FF;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="26" height="26" viewBox="0 0 500 500" fill="none">
+            <rect x="30" y="30" width="440" height="440" rx="80" stroke="white" stroke-width="40" fill="none"/>
+            <text x="90" y="340" font-size="260" font-weight="900" fill="white" font-family="Arial">FP</text>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:800;color:var(--text)">FaucetPay</div>
+          <div style="font-size:11.5px;color:var(--muted)">Instant USDT payout</div>
+        </div>
+        <div style="margin-left:auto;background:#DCFCE7;border:1.5px solid #4ADE80;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:#16A34A">
+          ⚡ Instant
+        </div>
+      </div>
+
+      <!-- Email input -->
+      <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px">FaucetPay Registered Email</div>
+      <input class="withdraw-input" type="email" id="walletInput"
+        placeholder="Enter your FaucetPay email"
+        style="margin-bottom:14px" />
+
+      <!-- Amount input -->
+      <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px">Amount (T Coin)</div>
+      <div style="position:relative;margin-bottom:6px">
+        <input class="withdraw-input" type="number" id="withdrawAmountInput"
+          placeholder="Min 25 T Coin"
+          min="25"
+          style="margin-bottom:0;padding-right:80px" />
+        <button onclick="setMaxWithdraw()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--purple-bg);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--purple);cursor:pointer">MAX</button>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);margin-bottom:16px" id="withdrawAmountUsd">≈ $0.0000 USDT</div>
+
+      <!-- Withdraw button -->
+      <button class="btn-withdraw" id="withdrawBtn" onclick="processWithdraw()">
+        <span id="withdrawBtnText"><svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="5" width="21" height="14" rx="4" fill="#2B2FA8"/><rect x="14.5" y="9.5" width="8.5" height="7" rx="2.2" fill="#1C1F73"/><circle cx="18.7" cy="13" r="1.5" fill="#8FD0FF"/></svg> Withdraw via FaucetPay</span>
+      </button>
+
+      <!-- Info -->
+      <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="text-align:center;flex:1">
+          <div style="font-size:13px;font-weight:800;color:var(--purple)">25 T</div>
+          <div style="font-size:10.5px;color:var(--muted)">Min Withdraw</div>
+        </div>
+        <div style="width:1px;background:var(--border)"></div>
+        <div style="text-align:center;flex:1">
+          <div style="font-size:13px;font-weight:800;color:var(--green)">⚡ Now</div>
+          <div style="font-size:10.5px;color:var(--muted)">Payout Speed</div>
+        </div>
+        <div style="width:1px;background:var(--border)"></div>
+        <div style="text-align:center;flex:1">
+          <div style="font-size:13px;font-weight:800;color:var(--text)">USDT</div>
+          <div style="font-size:10.5px;color:var(--muted)">Internal</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Withdrawals -->
+    <div style="margin-top:18px;margin-bottom:6px;font-size:13px;font-weight:800;color:var(--text);padding:0 2px">Recent Withdrawals</div>
+    <div id="recentWithdrawalsList"></div>
+
+    <!-- Note -->
+    <div class="ads-info-box" style="margin-top:12px">
+      ⚠️ Enter your FaucetPay <strong>registered email address</strong> to receive USDT.<br>
+      💡 1 T Coin = $0.0001 USDT · Min 25 T Coin · FaucetPay instant payment
+    </div>
+  </div>
+
+  <!-- ADS PAGE -->
+  <div class="page" id="page-ads">
+    <div class="ads-hero">
+      <div class="ads-hero-coin">T</div>
+      <div class="ads-hero-title">Watch Ads, Earn T Coins</div>
+      <div class="ads-hero-sub">Earn +1 T Coin instantly after each ad!</div>
+    </div>
+
+    <!-- Adsgram Card -->
+    <div class="ad-card" style="border-color:#C4B5FD">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div class="ad-card-icon" style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#7C3AED,#4F46E5);flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="white" stroke-width="2" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="ad-card-title" style="font-size:15px">Native Reward Ad</div>
+          <div class="ad-card-desc" style="margin-bottom:0">Telegram native ads • Fast reward</div>
+        </div>
+        <div class="ad-reward-pill" style="margin:0 0 0 auto;margin-bottom:0">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#FDE68A,#F59E0B);color:#7C2D12;font-size:9px;font-weight:900;">T</span>
+          +1
+        </div>
+      </div>
+      <div id="adsgramProgressRow" style="display:flex;gap:6px;margin-bottom:12px"></div>
+      <div id="adsgramActionArea"></div>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--muted);text-align:center">
+        ⏱ 2 min cooldown · 4 ads/day
+      </div>
+    </div>
+
+    <!-- Quick Reward Ad Card -->
+    <div class="ad-card" style="border-color:#FBCFE8">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div class="ad-card-icon" style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#DB2777,#EC4899);flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="white" stroke-width="2"/><path d="M8 9h8M8 13h5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="ad-card-title" style="font-size:15px">Quick Reward Ad</div>
+          <div class="ad-card-desc" style="margin-bottom:0">Full-screen ad • Watch & earn</div>
+        </div>
+        <div class="ad-reward-pill" style="margin:0 0 0 auto;margin-bottom:0">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#FDE68A,#F59E0B);color:#7C2D12;font-size:9px;font-weight:900;">T</span>
+          +1
+        </div>
+      </div>
+      <div id="monetagIntProgressRow" style="display:flex;gap:6px;margin-bottom:12px"></div>
+      <div id="monetagIntActionArea"></div>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--muted);text-align:center">
+        ⏱ 3 min cooldown · 3 ads/day
+      </div>
+    </div>
+
+    <!-- Popup Reward Ad Card -->
+    <div class="ad-card" style="border-color:#BFDBFE">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div class="ad-card-icon" style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0284C7,#0EA5E9);flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" rx="2" stroke="white" stroke-width="2"/><path d="M9 2h6M12 2v4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="ad-card-title" style="font-size:15px">Popup Reward Ad</div>
+          <div class="ad-card-desc" style="margin-bottom:0">Instant popup ad • Earn quickly</div>
+        </div>
+        <div class="ad-reward-pill" style="margin:0 0 0 auto;margin-bottom:0">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#FDE68A,#F59E0B);color:#7C2D12;font-size:9px;font-weight:900;">T</span>
+          +1
+        </div>
+      </div>
+      <div id="monetagPopProgressRow" style="display:flex;gap:6px;margin-bottom:12px"></div>
+      <div id="monetagPopActionArea"></div>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--muted);text-align:center">
+        ⏱ 3 min cooldown · 2 ads/day
+      </div>
+    </div>
+
+    <!-- GigaPub Card -->
+    <div class="ad-card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div class="ad-card-icon" style="width:48px;height:48px;border-radius:14px;flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7z" fill="#7C2D12"/></svg>
+        </div>
+        <div>
+          <div class="ad-card-title" style="font-size:15px">Video Reward Ad</div>
+          <div class="ad-card-desc" style="margin-bottom:0">Short video ad • Watch & earn</div>
+        </div>
+        <div class="ad-reward-pill" style="margin:0 0 0 auto;margin-bottom:0">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#FDE68A,#F59E0B);color:#7C2D12;font-size:9px;font-weight:900;">T</span>
+          +1
+        </div>
+      </div>
+      <div id="adsProgressRow" style="display:flex;gap:6px;margin-bottom:12px"></div>
+      <div id="adActionArea"></div>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--muted);text-align:center">
+        ⏱ 12 min cooldown · 4 ads/day
+      </div>
+    </div>
+
+    <div class="ads-info-box">
+      📣 <strong>Native Ad</strong>: +1 T Coin · 2 min cooldown · 4/day<br>
+      🖼️ <strong>Quick Ad</strong>: +1 T Coin · 3 min cooldown · 3/day<br>
+      🪟 <strong>Popup Ad</strong>: +1 T Coin · 3 min cooldown · 2/day<br>
+      🎬 <strong>Video Ad</strong>: +1 T Coin · 12 min cooldown · 4/day<br>
+      💰 1 T Coin = $0.0001 USDT
+    </div>
+  </div>
+
+  <!-- HISTORY PAGE -->
+  <div class="page" id="page-history">
+    <div class="section-title">Earning History</div>
+    <div id="historyList"></div>
+  </div>
+
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-item active" id="nav-tasks" onclick="showPage('tasks')">
+    <span class="nav-icon icon-tasks">
+      <span class="ic-body"><span class="ic-clip"></span><span class="ic-line"></span><span class="ic-line"></span><span class="ic-line"></span></span>
+    </span>
+    <span class="nav-label">Tasks</span>
+  </div>
+  <div class="nav-item" id="nav-ads" onclick="showPage('ads')">
+    <span class="nav-icon icon-ads">
+      <span class="ic-circle"><span class="ic-triangle"></span></span>
+    </span>
+    <span class="nav-label">Ads</span>
+  </div>
+  <div class="nav-item" id="nav-withdraw" onclick="showPage('withdraw')">
+    <span class="nav-icon icon-withdraw">
+      <span class="ic-card"><span class="ic-stripe"></span><span class="ic-dot"></span></span>
+    </span>
+    <span class="nav-label">Withdraw</span>
+  </div>
+  <div class="nav-item" id="nav-history" onclick="showPage('history')">
+    <span class="nav-icon icon-history">
+      <span class="ic-clock"><span class="ic-hand-hr"></span><span class="ic-hand-min"></span></span>
+    </span>
+    <span class="nav-label">History</span>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+// Currency: T Coin. 10000 T Coin = $1 USDT (1 T Coin = $0.0001)
+const USDT_PER_T = 0.0001; // 1 T Coin = $0.0001 USDT
+const REWARD_PER_CHANNEL = 1;      // T Coin per channel join
+const VISIT_REWARD = 1;            // T Coin per daily visit
+const VISIT_REQUIRED_SEC = 10;     // seconds
+const MIN_WITHDRAW = 25;           // T Coin (= $0.0025 USDT, FaucetPay min)
+
+// FaucetPay-style wallet icon (used in place of an emoji for withdraw UI)
+const WALLET_ICON_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="5" width="21" height="14" rx="4" fill="#2B2FA8"/><rect x="1.5" y="5" width="21" height="14" rx="4" fill="none" stroke="#7C83F0" stroke-width="1" stroke-dasharray="1.5 1.8" opacity="0.7"/><rect x="14.5" y="9.5" width="8.5" height="7" rx="2.2" fill="#1C1F73"/><circle cx="18.7" cy="13" r="1.5" fill="#8FD0FF"/></svg>';
+
+// Ads (GigaPub) config
+const AD_REWARD = 1;               // T Coin per ad watched
+const AD_COOLDOWN_SEC = 12 * 60;   // 12 minutes between ads
+const AD_DAILY_LIMIT = 4;          // max ads per day
+
+// Ads (Adsgram) config
+const ADSGRAM_BLOCK_ID = '35899';
+const ADSGRAM_REWARD = 1;          // T Coin per ad watched
+const ADSGRAM_COOLDOWN_SEC = 2 * 60; // 2 minutes between ads
+const ADSGRAM_DAILY_LIMIT = 4;     // max ads per day
+
+// Ads (Monetag Interstitial) config
+const MZONE_ID = '11196243';
+const MONETAG_INT_REWARD = 1;        // T Coin per ad watched
+const MONETAG_INT_COOLDOWN_SEC = 3 * 60; // 3 minutes between ads
+const MONETAG_INT_DAILY_LIMIT = 3;   // max ads per day
+
+// Ads (Monetag Popup) config
+const MONETAG_POP_REWARD = 1;        // T Coin per ad watched
+const MONETAG_POP_COOLDOWN_SEC = 3 * 60; // 3 minutes between ads
+const MONETAG_POP_DAILY_LIMIT = 2;   // max ads per day
+
+const TG_SVG = `<svg viewBox="0 0 24 24" width="22" height="22" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
+
+const CHANNELS = [
+  {
+    id: 'ch1',
+    name: 'Reward Software',
+    desc: 'Earn rewards & crypto daily',
+    emoji: '🏅',
+    bg: 'linear-gradient(135deg,#7C3AED22,#2563EB22)',
+    url: 'https://t.me/Rewardsoftware'
+  },
+  {
+    id: 'ch2',
+    name: 'Reward Hub Zone',
+    desc: 'Free reward earning methods',
+    emoji: '🏆',
+    bg: 'linear-gradient(135deg,#16A34A22,#4ADE8022)',
+    url: 'https://t.me/rewardhubzone'
+  },
+  {
+    id: 'ch3',
+    name: 'FaucetPay Reward',
+    desc: 'FaucetPay tips & rewards',
+    emoji: '🚿',
+    bg: 'linear-gradient(135deg,#2563EB22,#60A5FA22)',
+    url: 'https://t.me/faucetpayreward'
+  },
+  {
+    id: 'ch4',
+    name: 'Reward Software Payment',
+    desc: 'Payment proofs & updates',
+    emoji: '💳',
+    bg: 'linear-gradient(135deg,#F59E0B22,#FCD34D22)',
+    url: 'https://t.me/rewardsoftwarepayment'
+  },
+  {
+    id: 'ch5',
+    name: 'Reward Games',
+    desc: 'Play games & earn rewards',
+    emoji: '🎮',
+    bg: 'linear-gradient(135deg,#EC489922,#F43F5E22)',
+    url: 'https://t.me/rewardgamese'
+  },
+  {
+    id: 'ch6',
+    name: 'Telegram Task',
+    desc: 'Official Telegram Task channel',
+    emoji: '✅',
+    bg: 'linear-gradient(135deg,#06B6D422,#0EA5E922)',
+    url: 'https://t.me/telegarmtask'
+  },
+  {
+    id: 'ch7',
+    name: 'Reward Coins',
+    desc: 'Earn free crypto coins',
+    emoji: '🪙',
+    bg: 'linear-gradient(135deg,#F97316 22,#FDBA7422)',
+    url: 'https://t.me/rewardcoinse'
+  },
+  {
+    id: 'ch8',
+    name: 'Reward Software News',
+    desc: 'Latest news & announcements',
+    emoji: '📢',
+    bg: 'linear-gradient(135deg,#8B5CF622,#C4B5FD22)',
+    url: 'https://t.me/RewardSoftwarenews'
+  },
+  {
+    id: 'ch9',
+    name: 'Crypto Details Update',
+    desc: 'Crypto news & market updates',
+    emoji: '📊',
+    bg: 'linear-gradient(135deg,#10B98122,#34D39922)',
+    url: 'https://t.me/Cryptodetailsupdate'
+  },
+  {
+    id: 'ch10',
+    name: 'Earn Free Crypto Reward',
+    desc: 'Free crypto earning methods',
+    emoji: '💰',
+    bg: 'linear-gradient(135deg,#3B82F622,#93C5FD22)',
+    url: 'https://t.me/earnfreecryptoreward'
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────
+let state = loadState();
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('claimRewardState');
+    if (saved) {
+      const s = JSON.parse(saved);
+      if (!s.ads) s.ads = { date: todayDate(), count: 0, lastWatch: 0 };
+      if (!s.adsgram) s.adsgram = { date: todayDate(), count: 0, lastWatch: 0 };
+      if (!s.monetagInt) s.monetagInt = { date: todayDate(), count: 0, lastWatch: 0 };
+      if (!s.monetagPop) s.monetagPop = { date: todayDate(), count: 0, lastWatch: 0 };
+      return s;
+    }
+  } catch(e) {}
+  return { balance: 0, joined: {}, dailyVisit: {}, history: [], ads: { date: todayDate(), count: 0, lastWatch: 0 }, adsgram: { date: todayDate(), count: 0, lastWatch: 0 }, monetagInt: { date: todayDate(), count: 0, lastWatch: 0 }, monetagPop: { date: todayDate(), count: 0, lastWatch: 0 } };
+}
+
+function saveState() {
+  try { localStorage.setItem('claimRewardState', JSON.stringify(state)); } catch(e) {}
+}
+
+function todayDate() {
+  return new Date().toISOString().slice(0,10); // YYYY-MM-DD
+}
+
+function hasVisitedToday(chId) {
+  return state.dailyVisit && state.dailyVisit[chId] === todayDate();
+}
+
+// ─── RENDER ───────────────────────────────────────────────
+function render() {
+  document.getElementById('headerBalance').textContent = Math.floor(state.balance);
+  document.getElementById('headerUSD').textContent = '≈ $' + (state.balance * USDT_PER_T).toFixed(4) + ' USDT';
+  document.getElementById('withdrawBig').textContent = Math.floor(state.balance);
+  document.getElementById('withdrawUsdEq').textContent = '≈ $' + (state.balance * USDT_PER_T).toFixed(4) + ' USDT';
+
+  const joinedCount = Object.keys(state.joined).filter(k => state.joined[k] === 'claimed').length;
+  const remaining = CHANNELS.length - joinedCount;
+  const earned = joinedCount * REWARD_PER_CHANNEL;
+  document.getElementById('statJoined').textContent = joinedCount;
+  document.getElementById('statLeft').textContent = Math.max(0, remaining);
+  document.getElementById('statEarned').textContent = earned;
+
+  // ── Section 1: Telegram Channels (Join) ──
+  const list = document.getElementById('channelList');
+  list.innerHTML = '';
+  CHANNELS.forEach(ch => {
+    const status = state.joined[ch.id] || 'none';
+    const card = document.createElement('div');
+    card.className = 'channel-card' + (status === 'claimed' ? ' joined' : '');
+    card.innerHTML = `
+      <div class="channel-header">
+        <div class="channel-avatar" style="background:linear-gradient(135deg,#2AABEE,#229ED9)">${TG_SVG}</div>
+        <div class="channel-info">
+          <div class="channel-name">${ch.name}</div>
+          <div class="channel-desc">${ch.desc}</div>
+        </div>
+        <div class="reward-badge">
+          <div class="usdt-icon" style="width:16px;height:16px;font-size:8px">T</div>
+          <span class="reward-text">+${REWARD_PER_CHANNEL} T</span>
+        </div>
+      </div>
+      <div class="channel-actions" id="actions-${ch.id}">
+        ${renderJoinActions(ch, status)}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  // ── Section 2: Daily Visit ──
+  const visitList = document.getElementById('dailyVisitList');
+  const joinedChannels = CHANNELS.filter(ch => {
+    const s = state.joined[ch.id];
+    return s === 'claimed' || s === 'pending';
+  });
+
+  if (joinedChannels.length === 0) {
+    visitList.innerHTML = `<div class="empty-state" style="padding:20px 0"><div class="emoji">📢</div><p>Join a channel first to unlock Daily Visit!</p></div>`;
+  } else {
+    visitList.innerHTML = '';
+    joinedChannels.forEach(ch => {
+      const visitedToday = hasVisitedToday(ch.id);
+      const card = document.createElement('div');
+      card.className = 'channel-card' + (visitedToday ? ' joined' : '');
+      card.innerHTML = `
+        <div class="channel-header">
+          <div class="channel-avatar" style="background:linear-gradient(135deg,#2AABEE,#229ED9)">${TG_SVG}</div>
+          <div class="channel-info">
+            <div class="channel-name">${ch.name}</div>
+            <div class="channel-desc">Daily reward: ${VISIT_REWARD} T Coin</div>
+          </div>
+          <div class="reward-badge">
+            <div class="usdt-icon" style="width:16px;height:16px;font-size:8px">T</div>
+            <span class="reward-text">+${VISIT_REWARD} T</span>
+          </div>
+        </div>
+        <div class="channel-actions" id="visit-actions-${ch.id}">
+          ${renderVisitAction(ch, visitedToday)}
+        </div>
+      `;
+      visitList.appendChild(card);
+    });
+  }
+
+  const historyList = document.getElementById('historyList');
+  if (state.history.length === 0) {
+    historyList.innerHTML = `<div class="empty-state"><div class="emoji">📭</div><p>No earnings yet.<br>Join channels & watch ads to earn T Coin!</p></div>`;
+  } else {
+    historyList.innerHTML = state.history.slice().reverse().map(h => `
+      <div class="history-item">
+        <div class="history-icon-wrap">${h.emoji}</div>
+        <div class="history-info">
+          <div class="history-title">${h.title}</div>
+          <div class="history-time">${h.time}</div>
+        </div>
+        <div class="history-amount">+${h.amount} T</div>
+      </div>
+    `).join('');
+  }
+
+  const recentWithdrawalsList = document.getElementById('recentWithdrawalsList');
+  if (recentWithdrawalsList) {
+    const withdrawals = state.history.filter(h => h.title === 'FaucetPay Withdrawal').slice().reverse().slice(0, 5);
+    if (withdrawals.length === 0) {
+      recentWithdrawalsList.innerHTML = `<div class="ads-info-box" style="text-align:center;color:var(--muted)">No withdrawals yet.</div>`;
+    } else {
+      recentWithdrawalsList.innerHTML = withdrawals.map(w => `
+        <div class="history-item">
+          <div class="history-icon-wrap">${w.emoji}</div>
+          <div class="history-info">
+            <div class="history-title">${w.title}</div>
+            <div class="history-time">${w.time}${w.payoutId ? ' · ID: ' + w.payoutId : ''}</div>
+          </div>
+          <div class="history-amount" style="color:var(--purple)">-${w.amount} T</div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+// ── Join Section Actions ──
+function renderJoinActions(ch, status) {
+  if (status === 'claimed') {
+    return `<button class="btn-claimed" style="width:100%">✅ Joined +${REWARD_PER_CHANNEL} T</button>`;
+  } else if (status === 'pending') {
+    return `
+      <button class="btn-join" onclick="openChannel('${ch.id}','${ch.url}')">📢 Join Again</button>
+      <button class="btn-verify" onclick="verifyClaim('${ch.id}','${ch.name}','${ch.emoji}')">✔ Verify Join</button>
+    `;
+  } else {
+    return `<button class="btn-join" style="width:100%" onclick="joinChannel('${ch.id}','${ch.url}')">📢 Join Channel</button>`;
+  }
+}
+
+// ── Daily Visit Section Actions ──
+function renderVisitAction(ch, visitedToday) {
+  if (visitedToday) {
+    return `<button class="btn-visit-done" style="width:100%">✅ Daily Visit Done</button>`;
+  } else {
+    return `<button class="btn-visit" style="width:100%" onclick="startVisit('${ch.id}','${ch.name}','${ch.emoji}','${ch.url}')"><svg viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Visit & Earn +${VISIT_REWARD} T</button>`;
+  }
+}
+
+// ─── JOIN ACTIONS ─────────────────────────────────────────
+function joinChannel(id, url) {
+  state.joined[id] = 'pending';
+  saveState();
+  render();
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.openTelegramLink(url);
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+function openChannel(id, url) {
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.openTelegramLink(url);
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+const VERIFY_API = 'https://telegramtask.vercel.app/api/verify-join';
+
+function getTelegramUserId() {
+  try {
+    const uid = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+    return uid ? String(uid) : null;
+  } catch(e) { return null; }
+}
+
+function getChannelUsername(channelId) {
+  const ch = CHANNELS.find(c => c.id === channelId);
+  if (!ch) return null;
+  // Extract username from t.me URL
+  const match = ch.url.match(/t\.me\/([^/?]+)/);
+  return match ? match[1] : null;
+}
+
+async function verifyClaim(id, name, emoji) {
+  const btn = document.querySelector(`#actions-${id} .btn-verify`);
+  if (btn) { btn.innerHTML = '<span class="spinner"></span> Checking...'; btn.disabled = true; }
+
+  // Get Telegram user ID
+  const userId = getTelegramUserId();
+  if (!userId) {
+    showToast('⚠️ Please open this app via Telegram!');
+    if (btn) { btn.innerHTML = '✅ Verify Join'; btn.disabled = false; }
+    return;
+  }
+
+  // Get channel username
+  const channelUsername = getChannelUsername(id);
+  if (!channelUsername) {
+    showToast('⚠️ Channel not found');
+    if (btn) { btn.innerHTML = '✅ Verify Join'; btn.disabled = false; }
+    return;
+  }
+
+  try {
+    const res = await fetch(VERIFY_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, channelUsername })
+    });
+
+    if (!res.ok) {
+      let serverMsg = '';
+      try { const errData = await res.json(); serverMsg = errData.error || ''; } catch(e) {}
+      showToast('⚠️ ' + (serverMsg || ('Server error (' + res.status + ') — check BOT_TOKEN / redeploy')));
+      if (btn) { btn.innerHTML = '✅ Verify Join'; btn.disabled = false; }
+      return;
+    }
+
+    const data = await res.json();
+
+    if (!data.ok) {
+      showToast('⚠️ ' + (data.error || 'Verification failed'));
+      if (btn) { btn.innerHTML = '✅ Verify Join'; btn.disabled = false; }
+      return;
+    }
+
+    if (!data.isMember) {
+      showToast('❌ Please join the channel first!');
+      if (btn) { btn.innerHTML = '✅ Verify Join'; btn.disabled = false; }
+      return;
+    }
+
+    // ✅ Confirmed member — give reward
+    state.joined[id] = 'claimed';
+    state.balance += REWARD_PER_CHANNEL;
+    state.history.push({ title: 'Joined ' + name, emoji, amount: REWARD_PER_CHANNEL, time: new Date().toLocaleString() });
+    saveState();
+    render();
+    showToast('🎉 +' + REWARD_PER_CHANNEL + ' T Coin Earned!');
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+      window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    }
+
+  } catch(err) {
+    console.error('verifyClaim:', err);
+    showToast('⚠️ Network error — check if API is deployed');
+    if (btn) { btn.innerHTML = '✅ Verify Join'; btn.disabled = false; }
+  }
+}
+
+// ─── DAILY VISIT ─────────────────────────────────────────
+let visitTimer = null;
+let visitSeconds = 0;
+let currentVisitId = null;
+let currentVisitName = '';
+let currentVisitEmoji = '';
+let visitCompleted = false;
+let visitCancelled = false;
+let visitTimerRunning = false;
+let channelOpened = false; // track if channel was opened
+
+function startVisit(id, name, emoji, url) {
+  currentVisitId = id;
+  currentVisitName = name;
+  currentVisitEmoji = emoji;
+  visitCompleted = false;
+  visitCancelled = false;
+  visitTimerRunning = false;
+  channelOpened = false;
+  visitSeconds = VISIT_REQUIRED_SEC;
+
+  document.getElementById('visitChannelName').textContent = name;
+  document.getElementById('countdownNum').textContent = visitSeconds;
+  document.getElementById('visitStatus').textContent = '📢 Opening channel...';
+  document.getElementById('visitStatus').className = 'visit-status';
+  document.getElementById('visitCancelBtn').style.display = '';
+  document.getElementById('visitCancelBtn').textContent = '✖ Back (No Reward)';
+  document.getElementById('visitCancelBtn').onclick = cancelVisit;
+  document.getElementById('visitOverlay').classList.add('show');
+
+  // Open channel
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.openTelegramLink(url);
+  } else {
+    window.open(url, '_blank');
+  }
+
+  // Mark channel as opened and start the timer directly — don't rely only on
+  // visibilitychange, since many Telegram clients don't fire it reliably
+  // when openTelegramLink is used from inside a Mini App.
+  setTimeout(() => {
+    channelOpened = true;
+    document.getElementById('visitStatus').textContent = '⏳ Timer running...';
+    document.getElementById('visitStatus').className = 'visit-status';
+    resumeVisitTimer();
+  }, 800);
+}
+
+function tickVisitTimer() {
+  if (!visitTimerRunning || visitCancelled || visitCompleted) return;
+  visitSeconds--;
+  document.getElementById('countdownNum').textContent = visitSeconds;
+  if (visitSeconds <= 0) {
+    visitTimerRunning = false;
+    visitCompleted = true;
+    claimVisitReward();
+  }
+}
+
+function pauseVisitTimer() {
+  if (visitTimerRunning) {
+    clearInterval(visitTimer);
+    visitTimer = null;
+    visitTimerRunning = false;
+  }
+}
+
+function resumeVisitTimer() {
+  if (!visitCompleted && !visitCancelled && visitSeconds > 0 && !visitTimerRunning) {
+    visitTimerRunning = true;
+    visitTimer = setInterval(tickVisitTimer, 1000);
+  }
+}
+
+// visibilitychange — if the user actually backgrounds the Telegram app/tab,
+// pause the timer; resume when they return to it. This is now a bonus
+// behavior on top of the guaranteed auto-start in startVisit().
+document.addEventListener('visibilitychange', () => {
+  const overlayOpen = document.getElementById('visitOverlay').classList.contains('show');
+  if (!overlayOpen) return;
+
+  if (document.hidden) {
+    // User left the app (e.g. switched to channel in a separate view)
+    if (channelOpened && !visitCompleted && !visitCancelled) {
+      document.getElementById('visitStatus').textContent = '⏳ Timer running...';
+      document.getElementById('visitStatus').className = 'visit-status';
+      resumeVisitTimer();
+    }
+  } else {
+    // User is back on this page — keep the timer going (don't pause),
+    // since on Telegram the overlay itself stays visible while counting.
+  }
+});
+
+function claimVisitReward() {
+  if (!state.dailyVisit) state.dailyVisit = {};
+  state.dailyVisit[currentVisitId] = todayDate();
+  state.balance = state.balance + VISIT_REWARD;
+  state.history.push({
+    title: 'Daily Visit: ' + currentVisitName,
+    emoji: '<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#D97706"/></svg>',
+    amount: VISIT_REWARD,
+    time: new Date().toLocaleString()
+  });
+  saveState();
+
+  document.getElementById('countdownNum').textContent = '🎉';
+  document.getElementById('visitStatus').textContent = '+' + VISIT_REWARD + ' T Coin Earned!';
+  document.getElementById('visitStatus').className = 'visit-status success';
+  document.getElementById('visitCancelBtn').textContent = '✔ Close';
+  document.getElementById('visitCancelBtn').onclick = closeVisitOverlay;
+
+  if (window.Telegram?.WebApp?.HapticFeedback) {
+    window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+  }
+
+  setTimeout(() => {
+    closeVisitOverlay();
+    render();
+    showToast('📺 +' + VISIT_REWARD + ' T Coin Daily Visit Reward!');
+  }, 1800);
+}
+
+function cancelVisit() {
+  visitCancelled = true;
+  pauseVisitTimer();
+
+  document.getElementById('countdownNum').textContent = '❌';
+  document.getElementById('visitStatus').textContent = 'Left before 10 sec! No reward earned.';
+  document.getElementById('visitStatus').className = 'visit-status fail';
+  document.getElementById('visitCancelBtn').textContent = '↩ Try Again';
+  document.getElementById('visitCancelBtn').onclick = closeVisitOverlay;
+}
+
+function closeVisitOverlay() {
+  pauseVisitTimer();
+  channelOpened = false;
+  document.getElementById('visitOverlay').classList.remove('show');
+  document.getElementById('visitCancelBtn').onclick = cancelVisit;
+  render();
+}
+
+// ─── WITHDRAW ─────────────────────────────────────────────
+const WITHDRAW_API = 'https://telegramtask.vercel.app/api/withdraw';
+
+function setMaxWithdraw() {
+  const input = document.getElementById('withdrawAmountInput');
+  if (input) {
+    input.value = Math.floor(state.balance);
+    updateWithdrawUsd();
+  }
+}
+
+function updateWithdrawUsd() {
+  const input = document.getElementById('withdrawAmountInput');
+  const label = document.getElementById('withdrawAmountUsd');
+  if (!input || !label) return;
+  const val = parseFloat(input.value) || 0;
+  label.textContent = '≈ $' + (val * USDT_PER_T).toFixed(4) + ' USDT';
+}
+
+function showConfirmWithdrawModal(wallet, tCoinAmount) {
+  document.getElementById('confirmCoins').textContent = tCoinAmount.toLocaleString() + ' Coins';
+  document.getElementById('confirmUsdt').textContent = '$' + (tCoinAmount * USDT_PER_T).toFixed(4) + ' USDT';
+  document.getElementById('confirmEmail').textContent = wallet;
+  document.getElementById('confirmWithdrawModal').classList.add('show');
+}
+
+function closeConfirmWithdrawModal() {
+  document.getElementById('confirmWithdrawModal').classList.remove('show');
+}
+
+function processWithdraw() {
+  const wallet = document.getElementById('walletInput')?.value.trim();
+  const amountRaw = document.getElementById('withdrawAmountInput')?.value.trim();
+  const tCoinAmount = parseFloat(amountRaw);
+
+  if (!wallet) { showToast('⚠️ Please enter your FaucetPay email'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(wallet)) {
+    showToast('⚠️ Please enter a valid email address');
+    return;
+  }
+  if (!tCoinAmount || tCoinAmount < MIN_WITHDRAW) {
+    showToast('⚠️ Minimum ' + MIN_WITHDRAW + ' T Coin required');
+    return;
+  }
+  if (tCoinAmount > state.balance) {
+    showToast('⚠️ Insufficient balance!');
+    return;
+  }
+
+  showConfirmWithdrawModal(wallet, tCoinAmount);
+}
+
+async function doWithdraw() {
+  closeConfirmWithdrawModal();
+  const wallet = document.getElementById('walletInput')?.value.trim();
+  const amountRaw = document.getElementById('withdrawAmountInput')?.value.trim();
+  const tCoinAmount = parseFloat(amountRaw);
+  const btn = document.getElementById('withdrawBtn');
+  const btnText = document.getElementById('withdrawBtnText');
+
+  if (!wallet) { showToast('⚠️ Please enter your FaucetPay email'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(wallet)) {
+    showToast('⚠️ Please enter a valid email address');
+    return;
+  }
+  if (!tCoinAmount || tCoinAmount < MIN_WITHDRAW) {
+    showToast('⚠️ Minimum ' + MIN_WITHDRAW + ' T Coin required');
+    return;
+  }
+  if (tCoinAmount > state.balance) {
+    showToast('⚠️ Insufficient balance!');
+    return;
+  }
+
+  // Disable button
+  if (btn) btn.disabled = true;
+  if (btnText) btnText.innerHTML = '<span class="spinner"></span> Processing...';
+
+  try {
+    const res = await fetch(WITHDRAW_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: wallet, tCoinAmount })
+    });
+
+    // Check HTTP status first
+    if (!res.ok) {
+      let errMsg = 'Server error (' + res.status + ')';
+      try {
+        const errData = await res.json();
+        errMsg = errData.error || errMsg;
+      } catch(e) {}
+      showToast('❌ ' + errMsg);
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data.ok) {
+      state.history.push({
+        title: 'FaucetPay Withdrawal',
+        emoji: "<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"1.5\" y=\"5\" width=\"21\" height=\"14\" rx=\"4\" fill=\"#2B2FA8\"/><rect x=\"14.5\" y=\"9.5\" width=\"8.5\" height=\"7\" rx=\"2.2\" fill=\"#1C1F73\"/><circle cx=\"18.7\" cy=\"13\" r=\"1.5\" fill=\"#8FD0FF\"/></svg>",
+        amount: tCoinAmount,
+        payoutId: data.payoutId || null,
+        time: new Date().toLocaleString()
+      });
+      state.balance -= tCoinAmount;
+      if (state.balance < 0) state.balance = 0;
+      saveState();
+      render();
+      document.getElementById('withdrawAmountInput').value = '';
+      document.getElementById('walletInput').value = '';
+      showWithdrawSuccessModal(tCoinAmount, data.payoutId, wallet);
+      if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+      }
+    } else {
+      showToast('❌ ' + (data.error || 'Withdrawal failed'));
+    }
+  } catch(err) {
+    console.error('doWithdraw error:', err);
+    // Distinguish between network failure and other errors
+    if (err.name === 'TypeError' && err.message.includes('fetch')) {
+      showToast('❌ Cannot reach server — check if API is deployed on Vercel');
+    } else {
+      showToast('❌ Error: ' + err.message);
+    }
+  } finally {
+    if (btn) btn.disabled = false;
+    if (btnText) btnText.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="5" width="21" height="14" rx="4" fill="#2B2FA8"/><rect x="14.5" y="9.5" width="8.5" height="7" rx="2.2" fill="#1C1F73"/><circle cx="18.7" cy="13" r="1.5" fill="#8FD0FF"/></svg> Withdraw via FaucetPay';
+  }
+}
+
+// ─── ADS (GigaPub) ─────────────────────────────────────────
+let adTickHandle = null;
+
+function ensureAdDayReset() {
+  if (!state.ads) state.ads = { date: todayDate(), count: 0, lastWatch: 0 };
+  if (state.ads.date !== todayDate()) {
+    state.ads.date = todayDate();
+    state.ads.count = 0;
+    state.ads.lastWatch = 0;
+    saveState();
+  }
+}
+
+function adSecondsLeft() {
+  if (!state.ads.lastWatch) return 0;
+  const elapsed = Math.floor((Date.now() - state.ads.lastWatch) / 1000);
+  const left = AD_COOLDOWN_SEC - elapsed;
+  return left > 0 ? left : 0;
+}
+
+function formatMMSS(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function renderAdsPage() {
+  ensureAdDayReset();
+  ensureAdsgramDayReset();
+  ensureMonetagIntDayReset();
+  ensureMonetagPopDayReset();
+
+  // ── GigaPub progress dots ──
+  const gigaDotsWrap = document.getElementById('adsProgressRow');
+  if (gigaDotsWrap) {
+    gigaDotsWrap.innerHTML = '';
+    for (let i = 0; i < AD_DAILY_LIMIT; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'ads-dot' + (i < state.ads.count ? ' done' : '');
+      dot.textContent = i < state.ads.count ? '✓' : (i + 1);
+      dot.style.cssText = 'width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;';
+      if (i < state.ads.count) {
+        dot.style.background = 'linear-gradient(135deg,#FDE68A,#F59E0B)';
+        dot.style.color = '#7C2D12';
+      } else {
+        dot.style.background = 'var(--bg)';
+        dot.style.border = '1.5px solid var(--border)';
+        dot.style.color = 'var(--muted)';
+      }
+      gigaDotsWrap.appendChild(dot);
+    }
+  }
+
+  // ── GigaPub action area ──
+  const gigaArea = document.getElementById('adActionArea');
+  const gigaLeft = adSecondsLeft();
+  if (state.ads.count >= AD_DAILY_LIMIT) {
+    gigaArea.innerHTML = `<div class="ad-cooldown-wrap"><span class="ad-limit-msg">🚫 Daily limit reached! Come back tomorrow.</span></div>`;
+    if (adTickHandle) { clearInterval(adTickHandle); adTickHandle = null; }
+  } else if (gigaLeft > 0) {
+    gigaArea.innerHTML = `<div class="ad-cooldown-wrap"><div class="ad-cooldown-ring"></div><span>Next in <span id="adCooldownTime">${formatMMSS(gigaLeft)}</span></span></div>`;
+    if (adTickHandle) clearInterval(adTickHandle);
+    adTickHandle = setInterval(() => {
+      const left = adSecondsLeft();
+      const el = document.getElementById('adCooldownTime');
+      if (!el) { clearInterval(adTickHandle); adTickHandle = null; return; }
+      if (left <= 0) { clearInterval(adTickHandle); adTickHandle = null; renderAdsPage(); }
+      else el.textContent = formatMMSS(left);
+    }, 1000);
+  } else {
+    gigaArea.innerHTML = `<button class="btn-watch-ad" id="watchAdBtn" onclick="watchAd()"><svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Video Ad +${AD_REWARD} T</button>`;
+    if (adTickHandle) { clearInterval(adTickHandle); adTickHandle = null; }
+  }
+
+  // ── Adsgram progress dots ──
+  const agDotsWrap = document.getElementById('adsgramProgressRow');
+  if (agDotsWrap) {
+    agDotsWrap.innerHTML = '';
+    for (let i = 0; i < ADSGRAM_DAILY_LIMIT; i++) {
+      const dot = document.createElement('div');
+      dot.style.cssText = 'width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;';
+      if (i < state.adsgram.count) {
+        dot.style.background = 'linear-gradient(135deg,#C4B5FD,#7C3AED)';
+        dot.style.color = 'white';
+        dot.textContent = '✓';
+      } else {
+        dot.style.background = 'var(--bg)';
+        dot.style.border = '1.5px solid var(--border)';
+        dot.style.color = 'var(--muted)';
+        dot.textContent = i + 1;
+      }
+      agDotsWrap.appendChild(dot);
+    }
+  }
+
+  // ── Adsgram action area ──
+  renderAdsgramArea();
+
+  // ── Monetag Interstitial & Popup action areas ──
+  renderMonetagIntArea();
+  renderMonetagPopArea();
+}
+
+function watchAd() {
+  ensureAdDayReset();
+  if (state.ads.count >= AD_DAILY_LIMIT) { showToast('🚫 Daily ad limit reached!'); renderAdsPage(); return; }
+  if (adSecondsLeft() > 0) { showToast('⏳ Please wait for cooldown'); return; }
+
+  const btn = document.getElementById('watchAdBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Loading...'; }
+
+  if (typeof window.showGiga !== 'function') {
+    showToast('⚠️ Ad not available right now');
+    if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Video Ad +${AD_REWARD} T`; }
+    return;
+  }
+
+  window.showGiga()
+    .then(() => {
+      state.ads.count += 1;
+      state.ads.lastWatch = Date.now();
+      state.balance += AD_REWARD;
+      state.history.push({ title: 'Video Ad Watched', emoji: '<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#7C2D12"/></svg>', amount: AD_REWARD, time: new Date().toLocaleString() });
+      saveState(); render();
+      showToast('🎉 +' + AD_REWARD + ' T Coin Earned!');
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(() => {
+      showToast('⚠️ Ad not completed, try again');
+      if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Video Ad +${AD_REWARD} T`; }
+    });
+}
+
+// ─── ADS (Adsgram) ──────────────────────────────────────────
+let adsgramTickHandle = null;
+let AdsgramController = null;
+let monetagIntTickHandle = null;
+let monetagPopTickHandle = null;
+
+function ensureAdsgramDayReset() {
+  if (!state.adsgram) state.adsgram = { date: todayDate(), count: 0, lastWatch: 0 };
+  if (state.adsgram.date !== todayDate()) {
+    state.adsgram.date = todayDate();
+    state.adsgram.count = 0;
+    state.adsgram.lastWatch = 0;
+    saveState();
+  }
+}
+
+function ensureMonetagIntDayReset() {
+  if (!state.monetagInt) state.monetagInt = { date: todayDate(), count: 0, lastWatch: 0 };
+  if (state.monetagInt.date !== todayDate()) {
+    state.monetagInt.date = todayDate();
+    state.monetagInt.count = 0;
+    state.monetagInt.lastWatch = 0;
+    saveState();
+  }
+}
+
+function monetagIntSecondsLeft() {
+  if (!state.monetagInt.lastWatch) return 0;
+  const elapsed = Math.floor((Date.now() - state.monetagInt.lastWatch) / 1000);
+  const left = MONETAG_INT_COOLDOWN_SEC - elapsed;
+  return left > 0 ? left : 0;
+}
+
+function ensureMonetagPopDayReset() {
+  if (!state.monetagPop) state.monetagPop = { date: todayDate(), count: 0, lastWatch: 0 };
+  if (state.monetagPop.date !== todayDate()) {
+    state.monetagPop.date = todayDate();
+    state.monetagPop.count = 0;
+    state.monetagPop.lastWatch = 0;
+    saveState();
+  }
+}
+
+function monetagPopSecondsLeft() {
+  if (!state.monetagPop.lastWatch) return 0;
+  const elapsed = Math.floor((Date.now() - state.monetagPop.lastWatch) / 1000);
+  const left = MONETAG_POP_COOLDOWN_SEC - elapsed;
+  return left > 0 ? left : 0;
+}
+
+function adsgramSecondsLeft() {
+  if (!state.adsgram.lastWatch) return 0;
+  const elapsed = Math.floor((Date.now() - state.adsgram.lastWatch) / 1000);
+  const left = ADSGRAM_COOLDOWN_SEC - elapsed;
+  return left > 0 ? left : 0;
+}
+
+function renderAdsgramArea() {
+  const area = document.getElementById('adsgramActionArea');
+  if (!area) return;
+  const secLeft = adsgramSecondsLeft();
+
+  if (state.adsgram.count >= ADSGRAM_DAILY_LIMIT) {
+    area.innerHTML = `<div class="ad-cooldown-wrap" style="border-color:var(--purple-bg)"><span class="ad-limit-msg">🚫 Daily limit reached! Come back tomorrow.</span></div>`;
+    if (adsgramTickHandle) { clearInterval(adsgramTickHandle); adsgramTickHandle = null; }
+  } else if (secLeft > 0) {
+    area.innerHTML = `<div class="ad-cooldown-wrap" style="border-color:var(--purple-bg)"><div class="ad-cooldown-ring" style="border-top-color:var(--purple)"></div><span>Next in <span id="adsgramCooldownTime">${formatMMSS(secLeft)}</span></span></div>`;
+    if (adsgramTickHandle) clearInterval(adsgramTickHandle);
+    adsgramTickHandle = setInterval(() => {
+      const left = adsgramSecondsLeft();
+      const el = document.getElementById('adsgramCooldownTime');
+      if (!el) { clearInterval(adsgramTickHandle); adsgramTickHandle = null; return; }
+      if (left <= 0) { clearInterval(adsgramTickHandle); adsgramTickHandle = null; renderAdsgramArea(); }
+      else el.textContent = formatMMSS(left);
+    }, 1000);
+  } else {
+    area.innerHTML = `<button class="btn-watch-ad" id="adsgramBtn" style="background:linear-gradient(135deg,#7C3AED,#4F46E5);box-shadow:0 6px 16px rgba(124,58,237,0.35)" onclick="watchAdsgramAd()"><svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Native Ad +${ADSGRAM_REWARD} T</button>`;
+    if (adsgramTickHandle) { clearInterval(adsgramTickHandle); adsgramTickHandle = null; }
+  }
+}
+
+function watchAdsgramAd() {
+  ensureAdsgramDayReset();
+  if (state.adsgram.count >= ADSGRAM_DAILY_LIMIT) { showToast('🚫 Daily limit reached!'); return; }
+  if (adsgramSecondsLeft() > 0) { showToast('⏳ Please wait for cooldown'); return; }
+
+  const btn = document.getElementById('adsgramBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Loading ad...'; }
+
+  // Init Adsgram controller fresh each time
+  try {
+    AdsgramController = window.Adsgram
+      ? window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID })
+      : null;
+  } catch(e) { AdsgramController = null; }
+
+  if (!AdsgramController) {
+    showToast('⚠️ Ad not available right now');
+    if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Native Ad +${ADSGRAM_REWARD} T`; }
+    return;
+  }
+
+  AdsgramController.show()
+    .then(() => {
+      // reward
+      state.adsgram.count += 1;
+      state.adsgram.lastWatch = Date.now();
+      state.balance += ADSGRAM_REWARD;
+      state.history.push({ title: 'Native Ad Watched', emoji: '<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#7C2D12"/></svg>', amount: ADSGRAM_REWARD, time: new Date().toLocaleString() });
+      saveState(); render();
+      showToast('🎉 +' + ADSGRAM_REWARD + ' T Coin Earned!');
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(({ type }) => {
+      if (type === 'show') {
+        // user closed early — no reward
+        showToast('⚠️ Ad closed early — no reward');
+      } else {
+        showToast('⚠️ Ad not available, try again');
+      }
+      if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Native Ad +${ADSGRAM_REWARD} T`; }
+    });
+}
+
+// ─── ADS (Monetag Interstitial) ─────────────────────────────
+function renderMonetagIntArea() {
+  const dotsWrap = document.getElementById('monetagIntProgressRow');
+  if (dotsWrap) {
+    dotsWrap.innerHTML = '';
+    for (let i = 0; i < MONETAG_INT_DAILY_LIMIT; i++) {
+      const dot = document.createElement('div');
+      dot.style.cssText = 'width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;';
+      if (i < state.monetagInt.count) {
+        dot.style.background = 'linear-gradient(135deg,#F9A8D4,#DB2777)';
+        dot.style.color = 'white';
+        dot.textContent = '✓';
+      } else {
+        dot.style.background = 'var(--bg)';
+        dot.style.border = '1.5px solid var(--border)';
+        dot.style.color = 'var(--muted)';
+        dot.textContent = i + 1;
+      }
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  const area = document.getElementById('monetagIntActionArea');
+  if (!area) return;
+  const secLeft = monetagIntSecondsLeft();
+
+  if (state.monetagInt.count >= MONETAG_INT_DAILY_LIMIT) {
+    area.innerHTML = `<div class="ad-cooldown-wrap" style="border-color:#FBCFE8"><span class="ad-limit-msg">🚫 Daily limit reached! Come back tomorrow.</span></div>`;
+    if (monetagIntTickHandle) { clearInterval(monetagIntTickHandle); monetagIntTickHandle = null; }
+  } else if (secLeft > 0) {
+    area.innerHTML = `<div class="ad-cooldown-wrap" style="border-color:#FBCFE8"><div class="ad-cooldown-ring" style="border-top-color:#DB2777"></div><span>Next in <span id="monetagIntCooldownTime">${formatMMSS(secLeft)}</span></span></div>`;
+    if (monetagIntTickHandle) clearInterval(monetagIntTickHandle);
+    monetagIntTickHandle = setInterval(() => {
+      const left = monetagIntSecondsLeft();
+      const el = document.getElementById('monetagIntCooldownTime');
+      if (!el) { clearInterval(monetagIntTickHandle); monetagIntTickHandle = null; return; }
+      if (left <= 0) { clearInterval(monetagIntTickHandle); monetagIntTickHandle = null; renderMonetagIntArea(); }
+      else el.textContent = formatMMSS(left);
+    }, 1000);
+  } else {
+    area.innerHTML = `<button class="btn-watch-ad" id="monetagIntBtn" style="background:linear-gradient(135deg,#DB2777,#EC4899);box-shadow:0 6px 16px rgba(219,39,119,0.35)" onclick="watchMonetagIntAd()"><svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Quick Ad +${MONETAG_INT_REWARD} T</button>`;
+    if (monetagIntTickHandle) { clearInterval(monetagIntTickHandle); monetagIntTickHandle = null; }
+  }
+}
+
+function watchMonetagIntAd() {
+  ensureMonetagIntDayReset();
+  if (state.monetagInt.count >= MONETAG_INT_DAILY_LIMIT) { showToast('🚫 Daily limit reached!'); return; }
+  if (monetagIntSecondsLeft() > 0) { showToast('⏳ Please wait for cooldown'); return; }
+
+  const btn = document.getElementById('monetagIntBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Loading ad...'; }
+
+  if (typeof window[`show_${MZONE_ID}`] !== 'function') {
+    showToast('⚠️ Ad not available right now');
+    if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Quick Ad +${MONETAG_INT_REWARD} T`; }
+    return;
+  }
+
+  window[`show_${MZONE_ID}`]()
+    .then(() => {
+      state.monetagInt.count += 1;
+      state.monetagInt.lastWatch = Date.now();
+      state.balance += MONETAG_INT_REWARD;
+      state.history.push({ title: 'Quick Ad Watched', emoji: '<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#7C2D12"/></svg>', amount: MONETAG_INT_REWARD, time: new Date().toLocaleString() });
+      saveState(); render();
+      showToast('🎉 +' + MONETAG_INT_REWARD + ' T Coin Earned!');
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(() => {
+      showToast('⚠️ Ad not completed, try again');
+      if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Quick Ad +${MONETAG_INT_REWARD} T`; }
+    });
+}
+
+// ─── ADS (Monetag Popup) ────────────────────────────────────
+function renderMonetagPopArea() {
+  const dotsWrap = document.getElementById('monetagPopProgressRow');
+  if (dotsWrap) {
+    dotsWrap.innerHTML = '';
+    for (let i = 0; i < MONETAG_POP_DAILY_LIMIT; i++) {
+      const dot = document.createElement('div');
+      dot.style.cssText = 'width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;';
+      if (i < state.monetagPop.count) {
+        dot.style.background = 'linear-gradient(135deg,#7DD3FC,#0284C7)';
+        dot.style.color = 'white';
+        dot.textContent = '✓';
+      } else {
+        dot.style.background = 'var(--bg)';
+        dot.style.border = '1.5px solid var(--border)';
+        dot.style.color = 'var(--muted)';
+        dot.textContent = i + 1;
+      }
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  const area = document.getElementById('monetagPopActionArea');
+  if (!area) return;
+  const secLeft = monetagPopSecondsLeft();
+
+  if (state.monetagPop.count >= MONETAG_POP_DAILY_LIMIT) {
+    area.innerHTML = `<div class="ad-cooldown-wrap" style="border-color:#BFDBFE"><span class="ad-limit-msg">🚫 Daily limit reached! Come back tomorrow.</span></div>`;
+    if (monetagPopTickHandle) { clearInterval(monetagPopTickHandle); monetagPopTickHandle = null; }
+  } else if (secLeft > 0) {
+    area.innerHTML = `<div class="ad-cooldown-wrap" style="border-color:#BFDBFE"><div class="ad-cooldown-ring" style="border-top-color:#0284C7"></div><span>Next in <span id="monetagPopCooldownTime">${formatMMSS(secLeft)}</span></span></div>`;
+    if (monetagPopTickHandle) clearInterval(monetagPopTickHandle);
+    monetagPopTickHandle = setInterval(() => {
+      const left = monetagPopSecondsLeft();
+      const el = document.getElementById('monetagPopCooldownTime');
+      if (!el) { clearInterval(monetagPopTickHandle); monetagPopTickHandle = null; return; }
+      if (left <= 0) { clearInterval(monetagPopTickHandle); monetagPopTickHandle = null; renderMonetagPopArea(); }
+      else el.textContent = formatMMSS(left);
+    }, 1000);
+  } else {
+    area.innerHTML = `<button class="btn-watch-ad" id="monetagPopBtn" style="background:linear-gradient(135deg,#0284C7,#0EA5E9);box-shadow:0 6px 16px rgba(2,132,199,0.35)" onclick="watchMonetagPopAd()"><svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Popup Ad +${MONETAG_POP_REWARD} T</button>`;
+    if (monetagPopTickHandle) { clearInterval(monetagPopTickHandle); monetagPopTickHandle = null; }
+  }
+}
+
+function watchMonetagPopAd() {
+  ensureMonetagPopDayReset();
+  if (state.monetagPop.count >= MONETAG_POP_DAILY_LIMIT) { showToast('🚫 Daily limit reached!'); return; }
+  if (monetagPopSecondsLeft() > 0) { showToast('⏳ Please wait for cooldown'); return; }
+
+  const btn = document.getElementById('monetagPopBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Loading ad...'; }
+
+  if (typeof window[`show_${MZONE_ID}`] !== 'function') {
+    showToast('⚠️ Ad not available right now');
+    if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Popup Ad +${MONETAG_POP_REWARD} T`; }
+    return;
+  }
+
+  window[`show_${MZONE_ID}`]('pop')
+    .then(() => {
+      state.monetagPop.count += 1;
+      state.monetagPop.lastWatch = Date.now();
+      state.balance += MONETAG_POP_REWARD;
+      state.history.push({ title: 'Popup Ad Watched', emoji: '<svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#7C2D12"/></svg>', amount: MONETAG_POP_REWARD, time: new Date().toLocaleString() });
+      saveState(); render();
+      showToast('🎉 +' + MONETAG_POP_REWARD + ' T Coin Earned!');
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    })
+    .catch(() => {
+      showToast('⚠️ Ad not completed, try again');
+      if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="white"/></svg> Watch Popup Ad +${MONETAG_POP_REWARD} T`; }
+    });
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  if (name === 'ads') renderAdsPage();
+
+  // Monetag In-App Interstitial — trigger on page switch (session continues, everyPage: false)
+  if (typeof show_11196243 === 'function') {
+    try {
+      show_11196243({
+        type: 'inApp',
+        inAppSettings: {
+          frequency: 2,
+          capping: 0.1,
+          interval: 30,
+          timeout: 5,
+          everyPage: false
+        }
+      });
+    } catch(e) {}
+  }
+}
+
+// ─── TOAST ────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function showWithdrawSuccessModal(tCoinAmount, payoutId, wallet) {
+  const usdtVal = (tCoinAmount * USDT_PER_T).toFixed(4);
+  document.getElementById('successUsdt').textContent = '$' + usdtVal + ' USDT';
+  document.getElementById('successCoins').textContent = tCoinAmount.toLocaleString() + ' Coins';
+  document.getElementById('successEmail').textContent = wallet || '—';
+  document.getElementById('successPayoutId').textContent = payoutId || 'OK';
+  const overlay = document.getElementById('withdrawSuccessModal');
+  overlay.classList.add('show');
+}
+
+function closeWithdrawSuccessModal() {
+  document.getElementById('withdrawSuccessModal').classList.remove('show');
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+if (window.Telegram && window.Telegram.WebApp) {
+  window.Telegram.WebApp.ready();
+  window.Telegram.WebApp.expand();
+}
+ensureAdDayReset();
+ensureAdsgramDayReset();
+ensureMonetagIntDayReset();
+ensureMonetagPopDayReset();
+render();
+
+// Live USD preview on amount input
+document.addEventListener('DOMContentLoaded', () => {
+  const amtInput = document.getElementById('withdrawAmountInput');
+  if (amtInput) amtInput.addEventListener('input', updateWithdrawUsd);
+});
+// Also hook after page renders (since input may not be in DOM at script parse time)
+setTimeout(() => {
+  const amtInput = document.getElementById('withdrawAmountInput');
+  if (amtInput) amtInput.addEventListener('input', updateWithdrawUsd);
+}, 500);
+</script>
+</body>
+</html>
