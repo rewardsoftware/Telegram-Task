@@ -668,7 +668,7 @@ const userId = user ? user.id : null;
 const username = user ? user.username : null;
 
 // ---- Adsgram interstitial ads ----
-// Rules: first ad at 7s after load, one on every tab switch, and one every 60s.
+// Rules: first ad at 3s after load, one on every tab switch, and one every 60s.
 const ADSGRAM_BLOCK_ID = "int-35898";
 let adController = null;
 let isShowingAd = false;
@@ -693,7 +693,7 @@ function showInterstitialAd() {
     });
 }
 
-setTimeout(showInterstitialAd, 7000); // first ad, 7s after load
+setTimeout(showInterstitialAd, 3000); // first ad, 3s after load
 setInterval(showInterstitialAd, 60000); // every 1 minute thereafter
 
 // ---- Monetag in-app interstitial ----
@@ -707,7 +707,7 @@ try {
         frequency: 2,
         capping: 0.1,
         interval: 60,
-        timeout: 20,
+        timeout: 6,
         everyPage: false,
       },
     });
